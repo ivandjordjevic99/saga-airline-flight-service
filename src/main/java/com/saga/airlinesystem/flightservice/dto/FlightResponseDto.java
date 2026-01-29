@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saga.airlinesystem.flightservice.model.FlightStatus;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -38,9 +37,6 @@ public class FlightResponseDto {
 
     @JsonProperty("flight_distance_miles")
     private Integer flightDistanceMiles;
-
-    @JsonProperty("price")
-    private BigDecimal price;
 
     @JsonProperty("flight_seats")
     private List<FlightSeatDto> flightSeats;

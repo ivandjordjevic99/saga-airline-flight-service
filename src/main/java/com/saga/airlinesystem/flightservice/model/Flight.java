@@ -43,7 +43,4 @@ public class Flight {
     @Column(name = "flight_distance_miles", nullable = false)
     private Integer flightDistanceMiles;
 
-    @Column(name = "price", nullable = false)
-    private BigDecimal price;
-
 }

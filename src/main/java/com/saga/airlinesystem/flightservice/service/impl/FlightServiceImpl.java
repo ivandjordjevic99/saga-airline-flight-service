@@ -33,10 +33,10 @@ public class FlightServiceImpl implements FlightService {
         flight.setArrivalTime(flightRequestDto.getArrivalTime());
         flight.setCompanyCode(flightRequestDto.getCompanyCode());
         flight.setFlightStatus(FlightStatus.OPEN_FOR_RESERVATIONS);
-        flight.setPrice(flightRequestDto.getPrice());
         flight.setFlightDistanceMiles(flightRequestDto.getFlightDistanceMiles());
 
         flightRepository.save(flight);
+        System.out.println("Created flight " + flight.getId());
         flightSeatService.createSeatsForFlight(flight);
 
         return toDto(flight);
@@ -78,8 +78,6 @@ public class FlightServiceImpl implements FlightService {
         flightResponseDto.setCompanyCode(flight.getCompanyCode());
         flightResponseDto.setFlightId(flight.getId());
         flightResponseDto.setFlightDistanceMiles(flight.getFlightDistanceMiles());
-        flightResponseDto.setPrice(flight.getPrice());
-
         return flightResponseDto;
     }
 }

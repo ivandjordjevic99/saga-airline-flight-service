@@ -1,6 +1,6 @@
 package com.saga.airlinesystem.flightservice.outboxevents;
 
-import com.saga.airlinesystem.reservationservice.rabbitmq.RabbitProducer;
+import com.saga.airlinesystem.flightservice.rabbitmq.RabbitProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -13,19 +13,17 @@ import java.util.List;
 public class OutboxProcessorTask {
 
     private final OutboxEventRepository outboxEventRepository;
-    private final RabbitProducer reservationProducer;
+    private final RabbitProducer rabbitProducer;
 
     @Scheduled(fixedRate = 5000)
     @Transactional
     public void process() {
-        System.out.println("Processing outbox events");
         List<OutboxEvent> outboxes = outboxEventRepository.findTop10ByStatusOrderByCreatedAtDesc(OutboxEventStatus.PENDING);
 
         for (OutboxEvent outbox : outboxes) {
-            System.out.println("Sending outbox event");
-            reservationProducer.sendReservationCreated(outbox.getPayload());
+            System.out.println("Sending outbox event " + outbox.getRoutingKey() + " on exchange " + outbox.getExchange());
+            rabbitProducer.sendEvent(outbox.getExchange(), outbox.getRoutingKey(), outbox.getPayload());
             outbox.setStatus(OutboxEventStatus.SENT);
-            System.out.println("Outbox event sent");
         }
     }
 }

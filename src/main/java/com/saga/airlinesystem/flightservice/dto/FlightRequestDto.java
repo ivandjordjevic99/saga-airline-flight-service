@@ -29,7 +29,4 @@ public class FlightRequestDto {
 
     @JsonProperty("flight_distance_miles")
     private Integer flightDistanceMiles;
-
-    @JsonProperty("price")
-    private BigDecimal price;
 }

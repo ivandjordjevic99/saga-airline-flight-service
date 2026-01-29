@@ -7,11 +7,10 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.saga.airlinesystem.flightservice.rabbitmq.RabbitMQConstants.*;
+
 @Configuration
 public class RabbitConfiguration {
-
-    public static final String FLIGHT_QUEUE = "flight.events";
-    public static final String TICKET_RESERVATION_EXCHANGE = "ticket-reservation.exchange";
 
     @Bean
     public TopicExchange ticketReservationExchange() {
@@ -24,18 +23,10 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Binding reservationCreatedBinding(Queue flightQueue, TopicExchange ticketReservationExchange) {
+    public Binding flightRequestsBinding(Queue flightQueue, TopicExchange ticketReservationExchange) {
         return BindingBuilder
                 .bind(flightQueue)
                 .to(ticketReservationExchange)
-                .with("reservation.created");
-    }
-
-    @Bean
-    public Binding reservationSuccessfulBinding(Queue flightQueue, TopicExchange ticketReservationExchange) {
-        return BindingBuilder
-                .bind(flightQueue)
-                .to(ticketReservationExchange)
-                .with("reservation.successful");
+                .with(FLIGHT_REQUESTS_TOPIC);
     }
 }

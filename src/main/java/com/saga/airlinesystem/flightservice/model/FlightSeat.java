@@ -22,10 +22,14 @@ public class FlightSeat {
     @Enumerated(EnumType.STRING)
     private FlightSeatStatus flightSeatStatus;
 
+    @Column(name = "email")
+    private String email;
+
     public FlightSeat(Flight flight, String flightSeatNumber) {
         this.flight = flight;
         this.flightSeatStatus = FlightSeatStatus.AVAILABLE;
         this.id = new FlightSeatId(flight.getId(), flightSeatNumber);
+        this.email = null;
     }
 
     public FlightSeat() {
