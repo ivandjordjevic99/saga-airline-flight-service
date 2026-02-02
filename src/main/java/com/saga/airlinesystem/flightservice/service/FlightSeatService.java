@@ -10,5 +10,6 @@ public interface FlightSeatService {
 
     void createSeatsForFlight(Flight flight);
     List<FlightSeatDto> getSeatsForFlight(UUID flightId);
-    void reserveFlightSeat(String reservationId, String flightId, String email, String seatNumber);
+    void reserveFlightSeat(String reservationId, String flightId, String seatNumber);
+    void releaseSeat(String reservationId);
 }

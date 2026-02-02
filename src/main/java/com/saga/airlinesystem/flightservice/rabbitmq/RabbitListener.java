@@ -1,12 +1,14 @@
 package com.saga.airlinesystem.flightservice.rabbitmq;
 
-import com.saga.airlinesystem.flightservice.rabbitmq.messages.ReserveSeatCommand;
+import com.saga.airlinesystem.flightservice.rabbitmq.messages.ReleaseSeatMessage;
+import com.saga.airlinesystem.flightservice.rabbitmq.messages.ReserveSeatRequestMessage;
 import com.saga.airlinesystem.flightservice.service.FlightSeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
+import static com.saga.airlinesystem.flightservice.rabbitmq.RabbitMQConstants.RELEASE_SEAT_REQUEST_KEY;
 import static com.saga.airlinesystem.flightservice.rabbitmq.RabbitMQConstants.RESERVE_SEAT_REQUEST_KEY;
 
 @Service
@@ -21,14 +23,16 @@ public class RabbitListener {
         System.out.println("Received message " + routingKey);
         switch (routingKey) {
             case RESERVE_SEAT_REQUEST_KEY:
-                ReserveSeatCommand message = objectMapper.readValue(payload, ReserveSeatCommand.class);
+                ReserveSeatRequestMessage reserveSeatRequestMessage = objectMapper.readValue(payload, ReserveSeatRequestMessage.class);
                 flightSeatService.reserveFlightSeat(
-                        message.getReservationId(),
-                        message.getFlightId(),
-                        message.getEmail(),
-                        message.getSeatNumber()
+                        reserveSeatRequestMessage.getReservationId(),
+                        reserveSeatRequestMessage.getFlightId(),
+                        reserveSeatRequestMessage.getSeatNumber()
                 );
                 break;
+            case RELEASE_SEAT_REQUEST_KEY:
+                ReleaseSeatMessage releaseSeatMessage = objectMapper.readValue(payload, ReleaseSeatMessage.class);
+                flightSeatService.releaseSeat(releaseSeatMessage.getReservationId());
             default:
                 System.out.println("Unknown routing key: " + routingKey);
         }

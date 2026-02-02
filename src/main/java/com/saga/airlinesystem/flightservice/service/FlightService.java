@@ -2,7 +2,6 @@ package com.saga.airlinesystem.flightservice.service;
 
 import com.saga.airlinesystem.flightservice.dto.FlightRequestDto;
 import com.saga.airlinesystem.flightservice.dto.FlightResponseDto;
-import com.saga.airlinesystem.flightservice.rabbitmq.messages.ReserveSeatCommand;
 
 import java.util.List;
 import java.util.UUID;

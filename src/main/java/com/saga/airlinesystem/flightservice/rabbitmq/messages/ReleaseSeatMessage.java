@@ -2,15 +2,14 @@ package com.saga.airlinesystem.flightservice.rabbitmq.messages;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
+@Setter
 @ToString(callSuper = true)
 @RequiredArgsConstructor
-public class ReserveSeatCommand extends BaseMessage {
+public class ReleaseSeatMessage extends BaseMessage {
 
     private final String reservationId;
-    private final String flightId;
-    private final String email;
-    private final String seatNumber;
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "flight_seats")
 @Getter
@@ -22,14 +24,14 @@ public class FlightSeat {
     @Enumerated(EnumType.STRING)
     private FlightSeatStatus flightSeatStatus;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "reservation_id", unique = true)
+    private UUID reservationId;
 
     public FlightSeat(Flight flight, String flightSeatNumber) {
         this.flight = flight;
         this.flightSeatStatus = FlightSeatStatus.AVAILABLE;
         this.id = new FlightSeatId(flight.getId(), flightSeatNumber);
-        this.email = null;
+        this.reservationId = null;
     }
 
     public FlightSeat() {

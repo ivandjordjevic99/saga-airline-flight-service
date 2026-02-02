@@ -27,4 +27,14 @@ public interface FlightSeatRepository extends JpaRepository<FlightSeat, FlightSe
             @Param("flightId") UUID flightId,
             @Param("seatNumber") String seatNumber
     );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+        select fs
+        from FlightSeat fs
+        where fs.reservationId = :reservationId
+    """)
+    Optional<FlightSeat> findSeatForRelease(
+            @Param("reservationId") UUID reservationId
+    );
 }
