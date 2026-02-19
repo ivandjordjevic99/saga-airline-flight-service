@@ -13,8 +13,8 @@ import static com.saga.airlinesystem.flightservice.rabbitmq.RabbitMQConstants.*;
 public class RabbitConfiguration {
 
     @Bean
-    public TopicExchange ticketReservationExchange() {
-        return new TopicExchange(TICKET_RESERVATION_EXCHANGE);
+    public TopicExchange ticketBookingExchange() {
+        return new TopicExchange(TICKET_BOOKING_EXCHANGE);
     }
 
     @Bean
@@ -23,10 +23,10 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Binding flightRequestsBinding(Queue flightQueue, TopicExchange ticketReservationExchange) {
+    public Binding flightRequestsBinding(Queue flightQueue, TopicExchange ticketBookingExchange) {
         return BindingBuilder
                 .bind(flightQueue)
-                .to(ticketReservationExchange)
+                .to(ticketBookingExchange)
                 .with(FLIGHT_REQUESTS_TOPIC);
     }
 }

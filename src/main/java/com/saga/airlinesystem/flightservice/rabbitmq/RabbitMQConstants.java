@@ -2,11 +2,11 @@ package com.saga.airlinesystem.flightservice.rabbitmq;
 
 public class RabbitMQConstants {
 
-    // exchanges
-    public static final String TICKET_RESERVATION_EXCHANGE = "ticket-reservation.exchange";
-
     // queue
     public static final String FLIGHT_QUEUE = "flight.events";
+
+    // exchanges
+    public static final String TICKET_BOOKING_EXCHANGE = "ticket-booking.exchange";
 
     // routing keys
     public static final String FLIGHT_REQUESTS_TOPIC = "request.flight.#";

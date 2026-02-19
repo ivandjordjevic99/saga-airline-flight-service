@@ -24,14 +24,14 @@ public class FlightSeat {
     @Enumerated(EnumType.STRING)
     private FlightSeatStatus flightSeatStatus;
 
-    @Column(name = "reservation_id", unique = true)
-    private UUID reservationId;
+    @Column(name = "ticket_order_id", unique = true)
+    private UUID ticketOrderId;
 
     public FlightSeat(Flight flight, String flightSeatNumber) {
         this.flight = flight;
         this.flightSeatStatus = FlightSeatStatus.AVAILABLE;
         this.id = new FlightSeatId(flight.getId(), flightSeatNumber);
-        this.reservationId = null;
+        this.ticketOrderId = null;
     }
 
     public FlightSeat() {

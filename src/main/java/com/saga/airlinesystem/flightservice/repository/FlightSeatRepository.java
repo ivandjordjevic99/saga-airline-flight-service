@@ -32,9 +32,9 @@ public interface FlightSeatRepository extends JpaRepository<FlightSeat, FlightSe
     @Query("""
         select fs
         from FlightSeat fs
-        where fs.reservationId = :reservationId
+        where fs.ticketOrderId = :ticketOrderId
     """)
     Optional<FlightSeat> findSeatForRelease(
-            @Param("reservationId") UUID reservationId
+            @Param("ticketOrderId") UUID ticketOrderId
     );
 }

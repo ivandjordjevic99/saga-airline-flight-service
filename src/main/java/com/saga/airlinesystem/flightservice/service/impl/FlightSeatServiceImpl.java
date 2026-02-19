@@ -50,13 +50,13 @@ public class FlightSeatServiceImpl implements FlightSeatService {
 
     @Override
     @Transactional
-    public void reserveFlightSeat(String reservationId, String flightId, String seatNumber) {
+    public void reserveFlightSeat(String ticketOrderId, String flightId, String seatNumber) {
         Optional<FlightSeat> optionalSeat = flightSeatRepository.findSeatForUpdate(UUID.fromString(flightId), seatNumber);
-        SeatReservationResultMessage message = new SeatReservationResultMessage(reservationId);
+        SeatReservationResultMessage message = new SeatReservationResultMessage(ticketOrderId);
 
         if(optionalSeat.isEmpty()) {
             message.setResolution("Seat not found");
-            outboxEventService.persistOutboxEvent(TICKET_RESERVATION_EXCHANGE, SEAT_RESERVATION_FAILED_KEY, message);
+            outboxEventService.saveOutboxEvent(TICKET_BOOKING_EXCHANGE, SEAT_RESERVATION_FAILED_KEY, message);
             return;
         }
         FlightSeat seat = optionalSeat.get();
@@ -64,40 +64,40 @@ public class FlightSeatServiceImpl implements FlightSeatService {
         if (seat.getFlightSeatStatus() == FlightSeatStatus.AVAILABLE) {
             System.out.println("Seat " + seatNumber + " is available. Reserving flight seat.");
             seat.setFlightSeatStatus(FlightSeatStatus.RESERVED);
-            seat.setReservationId(UUID.fromString(reservationId));
+            seat.setTicketOrderId(UUID.fromString(ticketOrderId));
             flightSeatRepository.save(seat);
 
             message.setMiles(seat.getFlight().getFlightDistanceMiles());
             message.setResolution("Seat reservation successful");
-            outboxEventService.persistOutboxEvent(TICKET_RESERVATION_EXCHANGE, SEAT_RESERVED_KEY, message);
-            log.info("Seat reservation {}, flight id {}, seat number {} successful", reservationId, flightId, seatNumber);
+            outboxEventService.saveOutboxEvent(TICKET_BOOKING_EXCHANGE, SEAT_RESERVED_KEY, message);
+            log.info("Seat reservation {}, flight id {}, seat number {} successful", ticketOrderId, flightId, seatNumber);
         } else {
             message.setResolution("Seat already reserved");
-            outboxEventService.persistOutboxEvent(TICKET_RESERVATION_EXCHANGE, SEAT_RESERVATION_FAILED_KEY, message);
+            outboxEventService.saveOutboxEvent(TICKET_BOOKING_EXCHANGE, SEAT_RESERVATION_FAILED_KEY, message);
             log.info("Seat reservation {}, flight id {}, seat number {} failed because seat is already reserved",
-                    reservationId, flightId, seatNumber);
+                    ticketOrderId, flightId, seatNumber);
         }
     }
 
     @Override
     @Transactional
-    public void releaseSeat(String reservationId) {
-        Optional<FlightSeat> optionalSeat = flightSeatRepository.findSeatForRelease(UUID.fromString(reservationId));
+    public void releaseSeat(String ticketOrderId) {
+        Optional<FlightSeat> optionalSeat = flightSeatRepository.findSeatForRelease(UUID.fromString(ticketOrderId));
 
         if(optionalSeat.isEmpty()) {
-            log.error("Flight seat with reservation id {} not found", reservationId);
+            log.error("Flight seat with ticket order id {} not found", ticketOrderId);
             return;
         }
         FlightSeat seat = optionalSeat.get();
 
         if (seat.getFlightSeatStatus() == FlightSeatStatus.RESERVED) {
             seat.setFlightSeatStatus(FlightSeatStatus.AVAILABLE);
-            seat.setReservationId(null);
+            seat.setTicketOrderId(null);
 
-            log.info("Seat {} of flight {} successfully released from reservation {}",
-                    seat.getId().getFlightSeatNumber(), seat.getId().getFlightId(), reservationId);
+            log.info("Seat {} of flight {} successfully released from ticket order {}",
+                    seat.getId().getFlightSeatNumber(), seat.getId().getFlightId(), ticketOrderId);
         } else {
-            log.error("Flight seat with reservation id {} was not in state RESERVED", reservationId);
+            log.error("Flight seat with ticket order id {} was not in state RESERVED", ticketOrderId);
         }
     }
 
@@ -105,8 +105,8 @@ public class FlightSeatServiceImpl implements FlightSeatService {
     private List<String> createSeatNumbers() {
         List<String> seatNumbers = new ArrayList<>();
 
-        for(int i = 1; i <= 10; i++) {
-            for(char j = 'A'; j <= 'F'; j++) {
+        for(int i = 1; i <= 3; i++) {
+            for(char j = 'A'; j <= 'D'; j++) {
                 seatNumbers.add(String.valueOf(i) + j);
             }
         }

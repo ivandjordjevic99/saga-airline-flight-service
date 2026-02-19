@@ -25,14 +25,15 @@ public class RabbitListener {
             case RESERVE_SEAT_REQUEST_KEY:
                 ReserveSeatRequestMessage reserveSeatRequestMessage = objectMapper.readValue(payload, ReserveSeatRequestMessage.class);
                 flightSeatService.reserveFlightSeat(
-                        reserveSeatRequestMessage.getReservationId(),
+                        reserveSeatRequestMessage.getTicketOrderId(),
                         reserveSeatRequestMessage.getFlightId(),
                         reserveSeatRequestMessage.getSeatNumber()
                 );
                 break;
             case RELEASE_SEAT_REQUEST_KEY:
                 ReleaseSeatMessage releaseSeatMessage = objectMapper.readValue(payload, ReleaseSeatMessage.class);
-                flightSeatService.releaseSeat(releaseSeatMessage.getReservationId());
+                flightSeatService.releaseSeat(releaseSeatMessage.getTicketOrderId());
+                break;
             default:
                 System.out.println("Unknown routing key: " + routingKey);
         }
