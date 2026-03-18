@@ -81,7 +81,7 @@ public class FlightSeatServiceImpl implements FlightSeatService {
 
     @Override
     @Transactional
-    public void releaseSeat(String ticketOrderId) {
+    public void releaseFlightSeat(String ticketOrderId) {
         Optional<FlightSeat> optionalSeat = flightSeatRepository.findSeatForRelease(UUID.fromString(ticketOrderId));
 
         if(optionalSeat.isEmpty()) {
